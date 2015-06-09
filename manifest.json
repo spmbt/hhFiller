@@ -1,0 +1,16 @@
+﻿{
+   "content_scripts": [ {
+      "exclude_globs": [  ],
+      "exclude_matches": [  ],
+      "include_globs": [
+		  "http://hh.ru/*", "http://moikrug.ru/*"  ],
+      "js": [ "hhfiller.user.js" ],
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_idle"
+   } ],
+   "converted_from_user_script": true,
+   "description": "Заполнить отклик на вакансию на hh.ru с помощью шаблона",
+   "name": "hhFiller",
+   "version": "1.2015.6.8",
+   "manifest_version": 2
+}
