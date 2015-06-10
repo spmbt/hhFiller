@@ -3,7 +3,7 @@
       "exclude_globs": [  ],
       "exclude_matches": [  ],
       "include_globs": [
-		  "http://hh.ru/*", "http://moikrug.ru/*"  ],
+		  "http://hh.ru/*", "https://moikrug.ru/*"  ],
       "js": [ "hhfiller.user.js" ],
       "matches": [ "http://*/*", "https://*/*" ],
       "run_at": "document_idle"

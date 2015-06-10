@@ -1,7 +1,8 @@
 // ==UserScript==
 // @id             hhFiller
 // @name           hhFiller
-// @version        1.2015.6.8
+// @name:ru        hhFiller
+// @version        2.2015.6.10
 // @namespace      github.io/spmbt
 // @author         spmbt
 // @description    Fill response post for vacation in hh.ru by template
@@ -9,6 +10,7 @@
 // @include        http://hh.ru/*
 // @include        https://moikrug.ru/*
 // @run-at         document-end
+// @update 1 fix multi textarea in hh.ru; link to article
 // ==/UserScript==
 (function(win, u, noConsole, letterTmpl, addTmpl){
 if(win != top) return; //не выполнять в фрейме
@@ -19,7 +21,7 @@ var $e = function(g){ //===создать или использовать име
 //g={el,blck,elA,cl,ht,cs,at,on,apT,prT,bef,aft}
 	if(typeof g.el =='function') g.el = g.el.apply(g, g.elA);
 	if(!g.el && g.el !==undefined && g.el !='') return g.el; //null|0|false
-	var x, o = g.el = g.el ||'DIV';
+	var o = g.el = g.el ||'DIV';
 	o = g.el = typeof o =='string'? /\W/.test(o) ? $q(o, g.blck) : win.document.createElement(o) : o;
 	if(o){ //выполнять, если существует el
 		if(g.cl)
@@ -106,24 +108,27 @@ if(site =='moikrug') //предлагать подмену ответов при
 if(!localStorage.tmpl && /^Ув\. соискатель/.test(letterTmpl)){ //начальное заполнение шаблона
 	
 	//диалог сохранения в localStorage шаблона письма
-	$e({
-		cl:'taTmplBack'
+	wcl('taTmplBack')
+	$e({el: $q('.taTmplBack')||0 //-чтобы создать не более 1 раза
+		,cl:'taTmplBack'
 		,cs:{position:'fixed', zIndex: 99991, width:'100%', height:'100%', top: 0, background:'rgba(48,48,48,0.4)'}
 		,apT: win.document.body
 	});
-	$e({
-		cl:'taTmplOver'
+	$e({el: $q('.taTmplOver')||0
+		,cl:'taTmplOver'
 		,cs:{position:'fixed', zIndex: 99992, width:'98%', height:'80%', margin:'0 1%', top:'12px'}
 		,ht:'<div style="width:100%; height:100%; text-align: left; background:rgba(255,255,255,0.5)">'
 			+'<div style="display: inline-block; padding: 0 20px; border-bottom: 2px dotted #000; font-size:16px; background:rgba(255,255,255,0.5); color:#333">'
-				+'Сообщение от скрипта <a href="hhfiller.user.js"><b>hhfiller.user.js</b></a></div>'
+				+'Сообщение от скрипта <a href="https://greasyfork.org/en/scripts/10338-hhfiller" target=_blank><b>hhfiller.user.js</b></a></div>'
 			+'<div style="padding: 4px 0; text-align: center; font-size:24px; background:rgba(255,255,255,0.5); color:#777">'+ letterTmpl +'</div>'
 			+'<textarea class="taTmpl" style="width:80%; height:80%; margin: 10px 10%;"></textarea><br>'
 			+'<div style="text-align: center">'
-				+'<button onclick="localStorage.tmpl = document.querySelector(\'.taTmpl\').value; document.querySelector(\'.taTmplBack\').style.display = document.querySelector(\'.taTmplOver\').style.display =\'none\';" style="font-size: 24px">Сохранить</button></div>'
+				+'<button onclick="var d = document, taS = d.querySelectorAll(\'.taTmpl\'), ta = taS[taS.length -1];'
+					+'ta && (localStorage.tmpl = ta.value); d.querySelector(\'.taTmplBack\').style.display ='
+					+' d.querySelector(\'.taTmplOver\').style.display =\'none\';" style="font-size: 24px">Сохранить</button></div>'
 			+'<div style="width:79%; margin: 10px 10%; padding: 10px; font-size:16px; background:rgba(255,255,255,0.5); color:#333">Этот текст будет появляться в поле ответа'
 					+ ({hh:' по кнопке "Откликнуться на вакансию"',moikrug:''})[site] +'.<br>'
-				+'<a href="#">Подробности</a> <i>(статья о скрипте)</i>.<br>'
+				+'<a href="http://habrahabr.ru/post/259881/" target=_blank>Подробности</a> <i>(статья о скрипте)</i>.<br>'
 				+'Чтобы записать другой шаблон, сотрите прежний командой "localStorage.tmpl=\'\'" в консоли.<br>'
 				+'Чтобы <i>отказаться</i> от использования шаблона, отключите скрипт hhFiller в настройках браузера.</div>'
 		+'</div>'
