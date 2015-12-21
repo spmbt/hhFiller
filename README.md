@@ -38,6 +38,9 @@
     * ![Автоввод выделенного текста в конец шаблона / Auto insert selected text in the end of template](img/hhFiller-selReqs-hh-20150610.png)
     * ![Запрос подтверждения на вставку на moikrug / Confirm after select text in site moikrug.ru](img/hhFiller-selectReqs-20150610.png)
 
+* Обновления
+    * 21.12.2015: обновлены пути для сайта hh.ru - восстановлена работа заполнения;
+
 ============[en]==============
 
 Fill response post for vacation in hh.ru and moikrug.ru by template (russian headhunter sites).

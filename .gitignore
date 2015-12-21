@@ -1,0 +1,7 @@
+.gitignore
+ARCH/
+*.rar
+*.zip
+--*.rtf
+.idea/
+.DS_Store

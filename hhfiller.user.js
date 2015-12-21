@@ -2,7 +2,7 @@
 // @id             hhFiller
 // @name           hhFiller
 // @name:ru        hhFiller
-// @version        2.2015.6.10
+// @version        3.2015.12.21
 // @namespace      github.io/spmbt
 // @author         spmbt
 // @description    Fill response post for vacation in hh.ru by template
@@ -10,7 +10,7 @@
 // @include        http://hh.ru/*
 // @include        https://moikrug.ru/*
 // @run-at         document-end
-// @update 1 fix multi textarea in hh.ru; link to article
+// @update 2 fix paths for hh;
 // ==/UserScript==
 (function(win, u, noConsole, letterTmpl, addTmpl){
 if(win != top) return; //не выполнять в фрейме
@@ -85,13 +85,16 @@ var $e = function(g){ //===создать или использовать име
 			.replace(/(\r?[\n:])\s+==да;/g,'$1');
 	};
 	return sel;
-};
+}, selC;
 String.prototype.wcl = wcl; //(для вывода в консоль)
 
 // по нажатию кнопки ответа на вакансию - скопировать выделенный текст (с обработкой):
-$e({el:'.HH-VacancyResponsePopup-MainButton', on:{mousedown: function(ev){
+$e({el:'.HH-VacancyResponsePopup-MainButton', on:{mousedown: selC = function(ev){
 	selMod = selCopy();
+	'selMod'.wcl(selMod)
+
 }}});
+$e({el:'.HH-VacancyResponsePopup-Link', on:{mousedown: selC}});
 if(site =='moikrug') //предлагать подмену ответов при каждом выделении текста
 	$e({el:'.job_show_description', on:{mouseup: function(ev){
 		var ta = $q('#vacancy_response_body');
@@ -106,7 +109,7 @@ if(site =='moikrug') //предлагать подмену ответов при
 	}}});
 
 if(!localStorage.tmpl && /^Ув\. соискатель/.test(letterTmpl)){ //начальное заполнение шаблона
-	
+
 	//диалог сохранения в localStorage шаблона письма
 	wcl('taTmplBack')
 	$e({el: $q('.taTmplBack')||0 //-чтобы создать не более 1 раза
@@ -142,7 +145,7 @@ var fillTarea = function(){
 new Tout({t:620, i:2e6, m: 1 //периодическая проверка наличия поля ввода на странице
 	,check: ({
 		hh: function(){
-			var tAreas = $qA('.vacancy-response-popup-letter')
+			var tAreas = $qA('.vacancy-response-popup .bloko-textarea')
 				,tLast;
 			if(tAreas.length && (!(tLast = tAreas[tAreas.length -1]).value
 					|| hhLenLast < tAreas.length && selModPrev != selMod) ){ //если пустое поле ввода - заполнить шаблоном
