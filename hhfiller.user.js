@@ -2,12 +2,13 @@
 // @id             hhFiller
 // @name           hhFiller
 // @name:ru        hhFiller
-// @version        3.2015.12.21
+// @version        4.2015.12.24
 // @namespace      github.io/spmbt
 // @author         spmbt
 // @description    Fill response post for vacation in hh.ru by template
 // @description:ru Заполнить отклик на вакансию на hh.ru с помощью шаблона
 // @include        http://hh.ru/*
+// @include        http://career.ru/*
 // @include        https://moikrug.ru/*
 // @run-at         document-end
 // @update 2 fix paths for hh;
@@ -15,7 +16,7 @@
 (function(win, u, noConsole, letterTmpl, addTmpl){
 if(win != top) return; //не выполнять в фрейме
 
-var site = ({'hh.ru':'hh', 'moikrug.ru':'moikrug'})[location.host]; //сайт, определяющий способ и правила публикации
+var site = ({'hh.ru':'hh', 'career.ru':'hh', 'moikrug.ru':'moikrug'})[location.host]; //сайт, определяющий способ и правила публикации
 
 var $e = function(g){ //===создать или использовать имеющийся элемент DOM===
 //g={el,blck,elA,cl,ht,cs,at,on,apT,prT,bef,aft}
@@ -174,8 +175,16 @@ new Tout({t:620, i:2e6, m: 1 //периодическая проверка на�
 				ta.style.maxHeight ='none';
 			}
 			return 0;
-		}	
+		}
 })[site]});
+(function(css){ //addRules
+	if(typeof GM_addStyle !=u) GM_addStyle(css); //Fx,Chr (old)
+	else if(typeof addStyle !=u) addStyle(css);
+	else //Op and all
+		$e({el:'style', apT: $q('head') }).appendChild(document.createTextNode(css)); //не проходит в Опере через $e
+})
+('.search-result-item__label:not(.g-hidden) +.search-result-description{background-color:#eee}'
++'.search-result-item__label:not(.g-hidden) +.search-result-description .search-result-description__item_primary{margin-bottom:-6px; padding-bottom: 6px;}');
 
 })(top,'undefined',''
 	//Вместо этой строки можно вставить свой шаблон письма.
