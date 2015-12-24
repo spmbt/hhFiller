@@ -1,4 +1,4 @@
-#### [hhFiller](https://greasyfork.org/ru/scripts/10338-hhfiller) - юзерскрипт для вставки шаблона письма ответа на вакансию, работающий на [Headhunter](http://hh.ru), [moikrug](http://moikrug.ru)
+#### [hhFiller](https://greasyfork.org/ru/scripts/10338-hhfiller) - юзерскрипт для вставки шаблона письма ответа на вакансию, работающий на [Headhunter](http://hh.ru), [career.ru](http://career.ru) (дочерний от Hh с теми же аккаунтами), [moikrug](http://moikrug.ru)
 
 * Шаблон вначале предлагается через попап с полем ввода ввести в память браузера при первом заходе на каждый обслуживаемый сайт (рис.1). Его же можно внести непосредственно в код скрипта в поле letterTmpl.
 
@@ -13,15 +13,15 @@
       "exclude_globs": [  ],
       "exclude_matches": [  ],
       "include_globs": [
-		  "http://hh.ru/*", "https://moikrug.ru/*"  ],
+		  "http://hh.ru/*", "http://career.ru/*", "https://moikrug.ru/*"  ],
       "js": [ "hhfiller.user.js" ],
       "matches": [ "http://*/*", "https://*/*" ],
       "run_at": "document_idle"
    } ],
    "converted_from_user_script": true,
-   "description": "Заполнить отклик на вакансию на hh.ru с помощью шаблона",
+   "description": "Заполнить отклик на вакансию на hh.ru и moikrug.ru с помощью шаблона",
    "name": "hhFiller",
-   "version": "2.2015.6.10",
+   "version": "4.2015.12.24",
    "manifest_version": 2
 }
 ```
@@ -40,6 +40,7 @@
 
 * Обновления
     * 21.12.2015: обновлены пути для сайта hh.ru - восстановлена работа заполнения;
+    * 24.12.2015: добавлен career.ru - всё, как на Hh, даже аккаунты те же;
 
 ============[en]==============
 
