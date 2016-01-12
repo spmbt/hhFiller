@@ -2,16 +2,16 @@
 // @id             hhFiller
 // @name           hhFiller
 // @name:ru        hhFiller
-// @version        4.2015.12.24
+// @version        5.2016.1.12
 // @namespace      github.io/spmbt
 // @author         spmbt
 // @description    Fill response post for vacation in hh.ru by template
-// @description:ru Заполнить отклик на вакансию на hh.ru с помощью шаблона
+// @description:ru Заполнить отклик на вакансию на hh.ru/career.ru/moikrug.ru с помощью шаблона
 // @include        http://hh.ru/*
 // @include        http://career.ru/*
 // @include        https://moikrug.ru/*
 // @run-at         document-end
-// @update 2 fix paths for hh;
+// @update 4 clean banners;
 // ==/UserScript==
 (function(win, u, noConsole, letterTmpl, addTmpl){
 if(win != top) return; //не выполнять в фрейме
@@ -184,7 +184,8 @@ new Tout({t:620, i:2e6, m: 1 //периодическая проверка на�
 		$e({el:'style', apT: $q('head') }).appendChild(document.createTextNode(css)); //не проходит в Опере через $e
 })
 ('.search-result-item__label:not(.g-hidden) +.search-result-description{background-color:#eee}'
-+'.search-result-item__label:not(.g-hidden) +.search-result-description .search-result-description__item_primary{margin-bottom:-6px; padding-bottom: 6px;}');
++'.search-result-item__label:not(.g-hidden) +.search-result-description .search-result-description__item_primary{margin-bottom:-6px; padding-bottom: 6px;}'
++'.bloko-column div[class*="banner-place"], div[class*="mt_ot"], .b-mainbanner{display:none}');
 
 })(top,'undefined',''
 	//Вместо этой строки можно вставить свой шаблон письма.
