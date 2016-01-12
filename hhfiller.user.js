@@ -2,22 +2,25 @@
 // @id             hhFiller
 // @name           hhFiller
 // @name:ru        hhFiller
-// @version        6.2016.1.12
+// @version        7.2016.1.12
 // @namespace      github.io/spmbt
 // @author         spmbt
 // @description    Fill response post for vacation in hh.ru by template
-// @description:ru Заполнить отклик на вакансию на hh.ru/career.ru/moikrug.ru с помощью шаблона
+// @description:ru Заполнить отклик на вакансию на hh.ru|career|moikrug|itmozg с помощью шаблона
 // @include        http://hh.ru/*
 // @include        http://career.ru/*
 // @include        https://moikrug.ru/*
+// @include        http://itmozg.ru/*
 // @run-at         document-end
+// @update 6 itmozg.ru added;
 // @update 5 save selection throw "tests page";
 // @update 4 clean banners;
+// @grant          none
 // ==/UserScript==
 (function(win, u, noConsole, letterTmpl, addTmpl){
 if(win != top) return; //не выполнять в фрейме
 
-var site = ({'hh.ru':'hh', 'career.ru':'hh', 'moikrug.ru':'moikrug'})[location.host]; //сайт, определяющий способ и правила публикации
+var site = ({'hh.ru':'hh', 'career.ru':'hh', 'moikrug.ru':'moikrug', 'itmozg.ru':'itmozg'})[location.host]; //сайт, определяющий способ и правила публикации
 
 var $e = function(g){ //===создать или использовать имеющийся элемент DOM===
 //g={el,blck,elA,cl,ht,cs,at,on,apT,prT,bef,aft}
@@ -87,14 +90,12 @@ var $e = function(g){ //===создать или использовать име
 			.replace(/(\r?[\n:])\s+==да;/g,'$1');
 	};
 	return sel;
-}, selC;
+}, selC, selS;
 String.prototype.wcl = wcl; //(для вывода в консоль)
 
 // по нажатию кнопки ответа на вакансию - скопировать выделенный текст (с обработкой):
 $e({el:'.HH-VacancyResponsePopup-MainButton', on:{mousedown: selC = function(ev){
-	selMod = selCopy();
-	//'selMod'.wcl(selMod)
-
+	selMod = selCopy(); //'selMod'.wcl(selMod)
 }}});
 $e({el:'.HH-VacancyResponsePopup-Link', on:{mousedown: selC}});
 if(site =='moikrug') //предлагать подмену ответов при каждом выделении текста
@@ -109,14 +110,14 @@ if(site =='moikrug') //предлагать подмену ответов при
 			ta.style.maxHeight ='none';
 		}
 	}}});
-if(site =='hh') //сохранять выделенное
-	$e({el:'.b-vacancy-desc.g-user-content', on:{mouseup: function(ev){
-		if(selMod = selCopy())
-			localStorage.lastSel = selMod; //сохранить непустое выделение на случай перехода через "тестовую страницу"
+if(/^hh$|itmozg/.test(site)){ //сохранять выделенное
+	$e({el:'.b-vacancy-desc.g-user-content', on:{mouseup: selS = function(ev){
+		if(selMod = selCopy()) //сохранить непустое выделение на случай перехода через "тестовую страницу"
+			localStorage.lastSel = selMod; // ...или просто на новую страницу для itmzog
 	}}});
-
+	$e({el:'.respond.button.mt-30', on:{mouseup: selS}});
+}
 if(!localStorage.tmpl && /^Ув\. соискатель/.test(letterTmpl)){ //начальное заполнение шаблона
-
 	//диалог сохранения в localStorage шаблона письма
 	//wcl('taTmplBack')
 	$e({el: $q('.taTmplBack')||0 //-чтобы создать не более 1 раза
@@ -137,7 +138,7 @@ if(!localStorage.tmpl && /^Ув\. соискатель/.test(letterTmpl)){ //н�
 					+'ta && (localStorage.tmpl = ta.value); d.querySelector(\'.taTmplBack\').style.display '
 					+'= d.querySelector(\'.taTmplOver\').style.display =\'none\';" style="font-size: 24px">Сохранить</button></div>'
 			+'<div style="width:79%; margin: 10px 10%; padding: 10px; font-size:16px; background:rgba(255,255,255,0.5); color:#333">Этот текст будет появляться в поле ответа'
-					+ ({hh:' по кнопке "Откликнуться на вакансию"',moikrug:''})[site] +'.<br>'
+					+ (({hh:' по кнопке "Откликнуться на вакансию"',moikrug:''})[site]||'') +'.<br>'
 				+'<a href="http://habrahabr.ru/post/259881/" target=_blank>Подробности</a> <i>(статья о скрипте)</i>.<br>'
 				+'Чтобы записать другой шаблон, сотрите прежний командой "localStorage.tmpl=\'\'" в консоли.<br>'
 				+'Чтобы <i>отказаться</i> от использования шаблона, отключите скрипт hhFiller в настройках браузера.</div>'
@@ -184,6 +185,16 @@ new Tout({t:620, i:2e6, m: 1 //периодическая проверка на�
 				win.setTimeout(function(){ta.style.height = ta.scrollHeight +'px';},0); //подправить высоту поля
 				ta.style.maxHeight ='none';
 			}
+			return 0;
+		}
+		,itmozg: function(){
+			var ta = $q('#applyForm #text');
+			if(ta && !ta.value){
+				ta.value = fillTarea();
+				win.setTimeout(function(){ta.style.height = ta.scrollHeight +'px';},0); //подправить высоту поля
+				ta.style.maxHeight ='none';
+			}
+			($qA('#resume option')||[{},{}])[1].selected =1; //выбрать первое резюме по списку
 			return 0;
 		}
 })[site]});

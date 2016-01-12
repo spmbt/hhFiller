@@ -3,14 +3,14 @@
       "exclude_globs": [  ],
       "exclude_matches": [  ],
       "include_globs": [
-		  "http://hh.ru/*", "http://career.ru/*", "https://moikrug.ru/*"  ],
+		  "http://hh.ru/*", "http://career.ru/*", "https://moikrug.ru/*", "http://itmozg.ru/*" ],
       "js": [ "hhfiller.user.js" ],
       "matches": [ "http://*/*", "https://*/*" ],
       "run_at": "document_idle"
    } ],
    "converted_from_user_script": true,
-   "description": "Заполнить отклик на вакансию на hh.ru/career.ru/moikrug.ru с помощью шаблона",
+   "description": "Заполнить отклик на вакансию на hh.ru|career|moikrug|itmozg с помощью шаблона",
    "name": "hhFiller",
-   "version": "6.2016.1.12",
+   "version": "7.2016.1.12",
    "manifest_version": 2
 }
