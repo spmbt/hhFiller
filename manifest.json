@@ -9,8 +9,8 @@
       "run_at": "document_idle"
    } ],
    "converted_from_user_script": true,
-   "description": "Заполнить отклик на вакансию на hh.ru|career|moikrug|itmozg с помощью шаблона",
+   "description": "Заполнить отклик на вакансию на hh.ru|career|moikrug|itmozg||superjob с помощью шаблона",
    "name": "hhFiller",
-   "version": "7.2016.1.12",
+   "version": "8.2016.1.12",
    "manifest_version": 2
 }

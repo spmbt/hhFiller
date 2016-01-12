@@ -2,17 +2,18 @@
 // @id             hhFiller
 // @name           hhFiller
 // @name:ru        hhFiller
-// @version        7.2016.1.12
+// @version        8.2016.1.12
 // @namespace      github.io/spmbt
 // @author         spmbt
 // @description    Fill response post for vacation in hh.ru by template
-// @description:ru Заполнить отклик на вакансию на hh.ru|career|moikrug|itmozg с помощью шаблона
+// @description:ru Заполнить отклик на вакансию на hh.ru|career|moikrug|itmozg|superjob с помощью шаблона
 // @include        http://hh.ru/*
 // @include        http://career.ru/*
 // @include        https://moikrug.ru/*
 // @include        http://itmozg.ru/*
+// @include        http://www.superjob.ru/*
 // @run-at         document-end
-// @update 6 itmozg.ru added;
+// @update 7 itmozg.ru,superjob.ru added;
 // @update 5 save selection throw "tests page";
 // @update 4 clean banners;
 // @grant          none
@@ -20,7 +21,7 @@
 (function(win, u, noConsole, letterTmpl, addTmpl){
 if(win != top) return; //не выполнять в фрейме
 
-var site = ({'hh.ru':'hh', 'career.ru':'hh', 'moikrug.ru':'moikrug', 'itmozg.ru':'itmozg'})[location.host]; //сайт, определяющий способ и правила публикации
+var site = ({'hh.ru':'hh', 'career.ru':'hh', 'moikrug.ru':'moikrug', 'itmozg.ru':'itmozg', 'www.superjob.ru':'superjob'})[location.host]; //сайт, определяющий способ и правила публикации
 
 var $e = function(g){ //===создать или использовать имеющийся элемент DOM===
 //g={el,blck,elA,cl,ht,cs,at,on,apT,prT,bef,aft}
@@ -110,6 +111,18 @@ if(site =='moikrug') //предлагать подмену ответов при
 			ta.style.maxHeight ='none';
 		}
 	}}});
+if(site =='superjob') //предлагать подмену ответов при каждом выделении текста
+	$e({el:'.VacancyView_details', on:{mouseup: function(ev){
+		var ta = $q('.VacancyView_body .VacancySendResumeButton_popup .VacancySendResumeButton_message_textarea');
+		if((selMod = selCopy()) && ta && win.confirm(
+				'Обновить область ответов на требования новым выделенным текстом?\n(Все изменения в старом тексте пропадут.)')){
+			if(!RegExp(addTmpl).test(ta.value))
+				ta.value = ta.value + addTmpl;
+			ta.value = ta.value.replace(RegExp('('+addTmpl.replace(/\r/g,'\\\r?').replace(/\n/g,'\\\n') +')([\\s\\S]*)'),'$1') + selMod;
+			win.setTimeout(function(){ta.style.height = ta.scrollHeight +'px';},0);
+			ta.style.maxHeight ='none';
+		}
+	}}});
 if(/^hh$|itmozg/.test(site)){ //сохранять выделенное
 	$e({el:'.b-vacancy-desc.g-user-content', on:{mouseup: selS = function(ev){
 		if(selMod = selCopy()) //сохранить непустое выделение на случай перехода через "тестовую страницу"
@@ -154,6 +167,7 @@ var fillTarea = function(){
 	return (localStorage.tmpl || letterTmpl).replace(/\n?$/,'\n') + (selMod && (addTmpl + selMod)||'');
 };
 
+var taChanged =0;
 new Tout({t:620, i:2e6, m: 1 //периодическая проверка наличия поля ввода на странице
 	,check: ({
 		hh: function(){
@@ -187,6 +201,16 @@ new Tout({t:620, i:2e6, m: 1 //периодическая проверка на�
 			}
 			return 0;
 		}
+		,superjob: function(){
+			var ta = $q('.VacancyView_body .VacancySendResumeButton_popup .VacancySendResumeButton_message_textarea')
+				,txt = ($q('.VacancySendResumeContacts_txt span')||{}).innerHTML||'';
+			if(ta && !taChanged){
+				ta.value = fillTarea().replace(/(Здравствуйте)(!)/,'$1, '+ txt +'$2');
+				win.setTimeout(function(){ta.style.height = ta.scrollHeight +'px'; taChanged = 1;},900); //подправить высоту поля
+				ta.style.maxHeight ='none';
+			}
+			return 0;
+		}
 		,itmozg: function(){
 			var ta = $q('#applyForm #text');
 			if(ta && !ta.value){
@@ -206,7 +230,9 @@ new Tout({t:620, i:2e6, m: 1 //периодическая проверка на�
 })
 ('.search-result-item__label:not(.g-hidden) +.search-result-description{background-color:#eee}'
 +'.search-result-item__label:not(.g-hidden) +.search-result-description .search-result-description__item_primary{margin-bottom:-6px; padding-bottom: 6px;}'
-+'div[class*="banner-place"], div[id*="mt_ot"], .b-mainbanner{display:none}');
++'div[class*="banner-place"], div[id*="mt_ot"], .b-mainbanner{display:none}'
++'.VacancyView_body .VacancySendResumeButton_popup{display:block!important}'
++'.VacancyView_body .VacancySendResumeButton_message, .VacancyView_body .VacancySendResumeButton_message_textarea_bg{height:auto;}');
 
 })(top,'undefined',''
 	//Вместо этой строки можно вставить свой шаблон письма.
