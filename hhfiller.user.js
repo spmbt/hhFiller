@@ -185,7 +185,7 @@ new Tout({t:620, i:2e6, m: 1 //периодическая проверка на�
 })
 ('.search-result-item__label:not(.g-hidden) +.search-result-description{background-color:#eee}'
 +'.search-result-item__label:not(.g-hidden) +.search-result-description .search-result-description__item_primary{margin-bottom:-6px; padding-bottom: 6px;}'
-+'.bloko-column div[class*="banner-place"], div[class*="mt_ot"], .b-mainbanner{display:none}');
++'div[class*="banner-place"], div[class*="mt_ot"], .b-mainbanner{display:none}');
 
 })(top,'undefined',''
 	//Вместо этой строки можно вставить свой шаблон письма.
