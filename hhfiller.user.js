@@ -2,7 +2,7 @@
 // @id             hhFiller
 // @name           hhFiller
 // @name:ru        hhFiller
-// @version        5.2016.1.12
+// @version        6.2016.1.12
 // @namespace      github.io/spmbt
 // @author         spmbt
 // @description    Fill response post for vacation in hh.ru by template
@@ -11,6 +11,7 @@
 // @include        http://career.ru/*
 // @include        https://moikrug.ru/*
 // @run-at         document-end
+// @update 5 save selection throw "tests page";
 // @update 4 clean banners;
 // ==/UserScript==
 (function(win, u, noConsole, letterTmpl, addTmpl){
@@ -92,7 +93,7 @@ String.prototype.wcl = wcl; //(для вывода в консоль)
 // по нажатию кнопки ответа на вакансию - скопировать выделенный текст (с обработкой):
 $e({el:'.HH-VacancyResponsePopup-MainButton', on:{mousedown: selC = function(ev){
 	selMod = selCopy();
-	'selMod'.wcl(selMod)
+	//'selMod'.wcl(selMod)
 
 }}});
 $e({el:'.HH-VacancyResponsePopup-Link', on:{mousedown: selC}});
@@ -108,11 +109,16 @@ if(site =='moikrug') //предлагать подмену ответов при
 			ta.style.maxHeight ='none';
 		}
 	}}});
+if(site =='hh') //сохранять выделенное
+	$e({el:'.b-vacancy-desc.g-user-content', on:{mouseup: function(ev){
+		if(selMod = selCopy())
+			localStorage.lastSel = selMod; //сохранить непустое выделение на случай перехода через "тестовую страницу"
+	}}});
 
 if(!localStorage.tmpl && /^Ув\. соискатель/.test(letterTmpl)){ //начальное заполнение шаблона
 
 	//диалог сохранения в localStorage шаблона письма
-	wcl('taTmplBack')
+	//wcl('taTmplBack')
 	$e({el: $q('.taTmplBack')||0 //-чтобы создать не более 1 раза
 		,cl:'taTmplBack'
 		,cs:{position:'fixed', zIndex: 99991, width:'100%', height:'100%', top: 0, background:'rgba(48,48,48,0.4)'}
@@ -140,6 +146,10 @@ if(!localStorage.tmpl && /^Ув\. соискатель/.test(letterTmpl)){ //н�
 	});
 }
 var fillTarea = function(){
+	if(!selMod){
+		selMod = localStorage.lastSel;
+		selMod && (localStorage.lastSel ='');
+	}
 	return (localStorage.tmpl || letterTmpl).replace(/\n?$/,'\n') + (selMod && (addTmpl + selMod)||'');
 };
 
@@ -185,7 +195,7 @@ new Tout({t:620, i:2e6, m: 1 //периодическая проверка на�
 })
 ('.search-result-item__label:not(.g-hidden) +.search-result-description{background-color:#eee}'
 +'.search-result-item__label:not(.g-hidden) +.search-result-description .search-result-description__item_primary{margin-bottom:-6px; padding-bottom: 6px;}'
-+'div[class*="banner-place"], div[class*="mt_ot"], .b-mainbanner{display:none}');
++'div[class*="banner-place"], div[id*="mt_ot"], .b-mainbanner{display:none}');
 
 })(top,'undefined',''
 	//Вместо этой строки можно вставить свой шаблон письма.

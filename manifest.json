@@ -9,8 +9,8 @@
       "run_at": "document_idle"
    } ],
    "converted_from_user_script": true,
-   "description": "Заполнить отклик на вакансию на hh.ru и moikrug.ru с помощью шаблона",
+   "description": "Заполнить отклик на вакансию на hh.ru/career.ru/moikrug.ru с помощью шаблона",
    "name": "hhFiller",
-   "version": "4.2015.12.24",
+   "version": "6.2016.1.12",
    "manifest_version": 2
 }
